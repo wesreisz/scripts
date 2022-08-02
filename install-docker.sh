@@ -13,11 +13,11 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 sudo apt update
 
-sudo apt install docker-ce
+sudo apt -y install docker-ce
 printf '\nDocker installed successfully\n\n'
 
 sudo usermod -aG docker ${USER}
 
-sudo apt install curl
+sudo apt -y install curl
 sudo curl -L "https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
 sudo chmod +x /usr/bin/docker-compose
