@@ -7,6 +7,8 @@ services:
         image: alfresco/process-services:1.11.4.1
         ports:
             - 8180:8080
+        volumes:
+            - ~/target/:/usr/local/tomcat/webapps/activiti-app/WEB-INF/lib/
             
     process-admin:
         restart: always
