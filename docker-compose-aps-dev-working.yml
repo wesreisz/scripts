@@ -4,9 +4,8 @@ version: "2"
 services:
     process:
         restart: always
-        platform: linux/amd64
-        #image: alfresco/process-services:1.11.0
-        image: alfresco/process-services:latest
+        image: alfresco/process-services:1.11.4.1
+        #image: alfresco/process-services:latest
         environment:
             ACTIVITI_DATASOURCE_USERNAME: alfresco
             ACTIVITI_DATASOURCE_PASSWORD: alfresco
@@ -27,10 +26,9 @@ services:
             - "$PWD:/root/.activiti/enterprise-license:ro"
 
     process-admin:
-        platform: linux/amd64
         restart: always
-        #image: alfresco/process-services-admin:1.11.0
-        image: alfresco/process-services-admin:latest
+        image: alfresco/process-services-admin:1.11.4.1
+        #image: alfresco/process-services-admin:latest
         ports:
             - 8181:8080
         depends_on:
@@ -48,7 +46,7 @@ services:
             - cluster.name=aps-es-cluster
             - cluster.initial_master_nodes=elasticsearch
             - bootstrap.memory_lock=true
-            - "ES_JAVA_OPTS=-Xms750m -Xmx750m"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
         ulimits:
             memlock:
                 soft: -1
@@ -57,7 +55,6 @@ services:
             - 9200:9200
 
     postgres-aps:
-        platform: linux/amd64
         restart: always
         image: postgres:11.6
         environment:
@@ -66,7 +63,6 @@ services:
             POSTGRES_PASSWORD: alfresco
 
     postgres-aps-admin:
-        platform: linux/amd64
         restart: always
         image: postgres:11.6
         environment:
