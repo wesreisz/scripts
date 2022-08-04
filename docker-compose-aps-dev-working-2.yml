@@ -1,0 +1,16 @@
+# Using version 2 as 3 does not support resource constraint options (cpu_*, mem_* limits) for non swarm mode in Compose
+version: "2"
+
+services:
+    process:
+        restart: always
+        image: alfresco/process-services:1.11.4.1
+        ports:
+            - 8180:8080
+            
+    process-admin:
+        restart: always
+        image: alfresco/process-services-admin:1.11.4.1
+        ports:
+            - 8181:8080
+       
