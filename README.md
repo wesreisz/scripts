@@ -1,3 +1,9 @@
+NOTE: If you're running local, you need quite a bit of memory. I'm using colima and 
+had to adjust my memory with the colima start command: `colima start --cpu 4 --memory 8`
+
+In addition, I'm using an M1 Mac so I needed to tell docker-compose to use linux images. Finally, I also 
+had to update the version of my elastic search to: 
+
 Setup Docker
 * install docker and docker-compose, see install script
 

@@ -1,0 +1,75 @@
+# Using version 2 as 3 does not support resource constraint options (cpu_*, mem_* limits) for non swarm mode in Compose
+version: "2"
+
+services:
+    process:
+        restart: always
+        platform: linux/amd64
+        #image: alfresco/process-services:1.11.0
+        image: alfresco/process-services:latest
+        environment:
+            ACTIVITI_DATASOURCE_USERNAME: alfresco
+            ACTIVITI_DATASOURCE_PASSWORD: alfresco
+            ACTIVITI_DATASOURCE_DRIVER: org.postgresql.Driver
+            ACTIVITI_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+            ACTIVITI_DATASOURCE_URL: 'jdbc:postgresql://postgres-aps:5432/activiti?characterEncoding=UTF-8'
+            ACTIVITI_CSRF_DISABLED: 'true'
+            ACTIVITI_CORS_ENABLED: 'true'
+            ACTIVITI_ES_SERVER_TYPE: rest
+            ACTIVITI_ES_REST_CLIENT_ADDRESS: elasticsearch
+            ACTIVITI_ES_REST_CLIENT_PORT: 9200
+            ACTIVITI_ES_REST_CLIENT_SCHEMA: http
+        ports:
+            - 8180:8080
+        depends_on:
+            - postgres-aps
+        volumes:
+            - "$PWD:/root/.activiti/enterprise-license:ro"
+
+    process-admin:
+        platform: linux/amd64
+        restart: always
+        #image: alfresco/process-services-admin:1.11.0
+        image: alfresco/process-services-admin:latest
+        ports:
+            - 8181:8080
+        depends_on:
+            - postgres-aps-admin
+            - process
+        volumes:
+            - ./activiti-admin.properties:/usr/local/tomcat/lib/activiti-admin.properties
+
+    elasticsearch:
+        restart: always
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+        container_name: elasticsearch
+        environment:
+            - node.name=elasticsearch
+            - cluster.name=aps-es-cluster
+            - cluster.initial_master_nodes=elasticsearch
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms750m -Xmx750m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        ports:
+            - 9200:9200
+
+    postgres-aps:
+        platform: linux/amd64
+        restart: always
+        image: postgres:11.6
+        environment:
+            POSTGRES_DB: activiti
+            POSTGRES_USER: alfresco
+            POSTGRES_PASSWORD: alfresco
+
+    postgres-aps-admin:
+        platform: linux/amd64
+        restart: always
+        image: postgres:11.6
+        environment:
+            POSTGRES_DB: activiti_admin
+            POSTGRES_USER: alfresco
+            POSTGRES_PASSWORD: alfresco
